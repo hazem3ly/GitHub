@@ -12,7 +12,8 @@ class HomeViewModel(val repository: RepositoryApi) : ViewModel() {
     }
 
 
-    internal suspend fun searchUsers(query: String, page: Int = 0, perPage: Int = 20) = GlobalScope.async {
+    internal suspend fun searchUsers(query: String, page: Int = 1, perPage: Int = 20) =
+        GlobalScope.async {
         return@async repository.searchUsers(query, page, perPage)
     }
 }

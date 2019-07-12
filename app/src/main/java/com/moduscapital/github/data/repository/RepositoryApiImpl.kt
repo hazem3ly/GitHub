@@ -13,8 +13,8 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class RepositoryApiImpl(
-        private val networkDataSource: NetworkDataSource,
-        private val repoDetailsDao: RepoDetailsDao
+    private val networkDataSource: NetworkDataSource,
+    private val repoDetailsDao: RepoDetailsDao
 ) : RepositoryApi {
 
 
@@ -28,6 +28,10 @@ class RepositoryApiImpl(
                 }
             }
         }
+    }
+
+    override suspend fun deleteOldUserRepos() {
+        repoDetailsDao.deleteOldEntries()
     }
 
     private fun persistFetchedData(response: Response<List<RepoDetails>>) {
@@ -45,7 +49,11 @@ class RepositoryApiImpl(
     }
 
 
-    override suspend fun searchUsers(query: String, page: Int, perPage: Int): LiveData<Response<SearchReaslt>> {
+    override suspend fun searchUsers(
+        query: String,
+        page: Int,
+        perPage: Int
+    ): LiveData<Response<SearchReaslt>> {
         return withContext(Dispatchers.IO) {
             networkDataSource.searchUsers(query, page, perPage)
             return@withContext networkDataSource.searchUsers

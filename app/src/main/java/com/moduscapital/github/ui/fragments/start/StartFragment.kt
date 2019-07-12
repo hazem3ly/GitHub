@@ -35,6 +35,7 @@ class StartFragment : Fragment() {
 
         search_btn?.setOnClickListener {
             if (user_name_et?.isValidateEditText() == true) {
+                user_name_et?.clearFocus()
                 openUserDetails(user_name_et?.value()!!)
             } else
                 Toast.makeText(requireContext(), "Empty Text Error", Toast.LENGTH_SHORT).show()
@@ -42,7 +43,7 @@ class StartFragment : Fragment() {
 
         load_saved?.setOnClickListener {
 
-            var user = requireContext().loadSavedUser()
+            val user = requireContext().loadSavedUser()
             if (user != "") {
                 openUserDetails(user)
             } else

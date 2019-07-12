@@ -10,7 +10,10 @@ import com.moduscapital.github.ui.fragments.userdetails.UserDetailsViewModelFact
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
-import org.kodein.di.generic.*
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
+import org.kodein.di.generic.singleton
 
 class App : Application(), KodeinAware {
     override val kodein = Kodein.lazy {
@@ -20,9 +23,19 @@ class App : Application(), KodeinAware {
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton { ApiService(instance()) }
         bind<NetworkDataSource>() with singleton { NetworkDataSourceImpl(instance()) }
-        bind<RepositoryApi>() with singleton { RepositoryApiImpl(instance(),instance()) }
+        bind<RepositoryApi>() with singleton { RepositoryApiImpl(instance(), instance()) }
         bind() from provider { HomeViewModelFactory(instance()) }
         bind() from provider { UserDetailsViewModelFactory(instance()) }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }
+
+    companion object {
+        private lateinit var instance: App
+        fun getInstance() = instance
     }
 
 }

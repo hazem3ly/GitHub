@@ -3,44 +3,43 @@ package com.moduscapital.github.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.moduscapital.github.R
 import com.moduscapital.github.data.network.response.RepoDetails
-import com.moduscapital.github.data.network.response.UserDetails
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.header_layout.view.*
 import kotlinx.android.synthetic.main.item_layout.view.*
 
 class UserDetailsAdapter(
-        val userRepos: ArrayList<RepoDetails>,
         val onRepoClicked: (repo: RepoDetails) -> Unit
-) :
-        RecyclerView.Adapter<UserDetailsAdapter.ItemViewHolder>() {
+) : ListAdapter<RepoDetails, UserDetailsAdapter.ItemViewHolder>(TaskDiffCallback())
+/* RecyclerView.Adapter<UserDetailsAdapter.ItemViewHolder>() */ {
+//    val userRepos: ArrayList<RepoDetails> = arrayListOf()
 
-    override fun getItemCount(): Int {
-        return userRepos.size
-    }
+    /* override fun getItemCount(): Int {
+         return userRepos.size
+     }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-            return ItemViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                            R.layout.item_layout,
-                            parent,
-                            false
-                    )
+        return ItemViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_layout,
+                parent,
+                false
             )
+        )
     }
-
+/*
     fun addList(list: List<RepoDetails>) {
+        this.userRepos.clear()
         this.userRepos.addAll(list)
         notifyDataSetChanged()
-    }
+    }*/
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(userRepos[position]) {
+        holder.bind(getItem(position)) {
             onRepoClicked(it)
         }
     }
@@ -78,5 +77,15 @@ class UserDetailsAdapter(
         }
     }
 
+    class TaskDiffCallback : DiffUtil.ItemCallback<RepoDetails>() {
+        override fun areItemsTheSame(oldItem: RepoDetails, newItem: RepoDetails): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: RepoDetails, newItem: RepoDetails): Boolean {
+            return oldItem == newItem
+        }
+
+    }
 
 }

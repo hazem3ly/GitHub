@@ -1,6 +1,7 @@
 package com.moduscapital.github.ui.fragments.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -34,7 +35,7 @@ class HomeFragment : ScopedFragment(), KodeinAware {
 
     private var isSearching: Boolean = false
     private var searchQuery: String = ""
-    private var page = 0
+    private var page = 1
 
 
     override fun onCreateView(
@@ -50,23 +51,26 @@ class HomeFragment : ScopedFragment(), KodeinAware {
         inflater?.inflate(R.menu.main_menu, menu)
 
         val searchViewItem = menu?.findItem(R.id.search)
-        searchViewItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return true
-            }
+        /*    searchViewItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    return true
+                }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                getMoreUsers(0)
-                isSearching = false
-                return true
-            }
-        })
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    progress.visibility = View.VISIBLE
+                    usersAdapter.removeItems()
+                    getMoreUsers(0)
+                    isSearching = false
+                    return true
+                }
+            })*/
 
         searchView = searchViewItem?.actionView as SearchView
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchView?.clearFocus()
-                searchRepo(query)
+                usersAdapter.removeItems()
+                searchUsers(query)
                 isSearching = true
                 return false
             }
@@ -77,6 +81,7 @@ class HomeFragment : ScopedFragment(), KodeinAware {
         })
 
         searchView?.setOnCloseListener {
+            progress.visibility = View.VISIBLE
             usersAdapter.removeItems()
             getMoreUsers(0)
             isSearching = false
@@ -112,10 +117,11 @@ class HomeFragment : ScopedFragment(), KodeinAware {
             }
 
             override fun loadMoreItems() {
+                Log.e("loading more ->", "getting more users")
                 isLoading = true
                 load_more_progress.visibility = View.VISIBLE
                 if (!isSearching)
-                    getMoreItems()
+                    getMoreUsers(usersAdapter.getLastItemId())
                 else {
                     getMoreSearching()
                 }
@@ -133,8 +139,8 @@ class HomeFragment : ScopedFragment(), KodeinAware {
 
     private fun getUsers() = launch {
         progress.visibility = View.VISIBLE
-        val repos = viewModel.getUsers().await()
-        repos.observe(this@HomeFragment.viewLifecycleOwner, Observer {
+        val users = viewModel.getUsers().await()
+        users.observe(this@HomeFragment.viewLifecycleOwner, Observer {
             load_more_progress.visibility = View.GONE
             progress.visibility = View.GONE
             isLoading = false
@@ -147,7 +153,7 @@ class HomeFragment : ScopedFragment(), KodeinAware {
 
     }
 
-    private fun searchRepo(query: String) = launch {
+    private fun searchUsers(query: String) = launch {
         searchQuery = query
         progress.visibility = View.VISIBLE
         usersAdapter.removeItems()
@@ -165,12 +171,9 @@ class HomeFragment : ScopedFragment(), KodeinAware {
     }
 
 
-    fun getMoreItems() {
-        getMoreUsers(usersAdapter.getLastItemId())
-    }
 
     private fun getMoreSearching() = launch {
-        viewModel.searchUsers(searchQuery, page++).await()
+        viewModel.searchUsers(searchQuery, ++page).await()
     }
 
     private fun getMoreUsers(since: Int = 0) = launch {

@@ -12,10 +12,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.moduscapital.github.R
 import com.moduscapital.github.data.network.response.RepoDetails
+import com.moduscapital.github.extensions.loadSavedUser
 import com.moduscapital.github.extensions.saveToSP
+import com.moduscapital.github.ui.activities.MainActivity
 import com.moduscapital.github.ui.adapters.PaginationScrollListener
 import com.moduscapital.github.ui.adapters.UserDetailsAdapter
 import com.moduscapital.github.ui.base.ScopedFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.user_details_fragment.*
 import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
@@ -31,8 +34,8 @@ class UserDetailsFragment : ScopedFragment(), KodeinAware {
     private lateinit var viewModel: UserDetailsViewModel
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.user_details_fragment, container, false)
     }
@@ -41,19 +44,30 @@ class UserDetailsFragment : ScopedFragment(), KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserDetailsViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(UserDetailsViewModel::class.java)
 
         val safeArgs = arguments?.let { UserDetailsFragmentArgs.fromBundle(it) }
 
         userName = safeArgs?.userName ?: ""
 
         if (userName != "") {
+            val user = requireContext().loadSavedUser()
+            if (user != userName) {
+                deleteOldRepos()
+            }
+            (activity as? MainActivity)?.toolbar?.title = userName
             userName.saveToSP(requireContext())
         }
 
+        initRecycler()
         getUserRepos(userName)
 
 
+    }
+
+    private fun deleteOldRepos() = launch {
+        viewModel.deleteOldData().await()
     }
 
 
@@ -61,34 +75,34 @@ class UserDetailsFragment : ScopedFragment(), KodeinAware {
         progress.visibility = View.VISIBLE
         val userRepos = viewModel.getUserRepos(userName).await()
         userRepos.observe(this@UserDetailsFragment.viewLifecycleOwner, Observer {
-            load_more_progress.visibility = View.GONE
             progress.visibility = View.GONE
             if (it != null) {
-                it?.let { it1 ->
-                    if (!isLoading) bindRecycler(it1 as ArrayList<RepoDetails>)
-                    else {
-                        updateList(it1)
-                        isLoading = false
-                    }
+                it.let { it1 ->
+                    updateList(it1)
+                    isLoading = false
                 }
             } else {
-                Toast.makeText(this@UserDetailsFragment.requireContext(), "Error Loading Repos", Toast.LENGTH_SHORT)
-                        .show()
+                Toast.makeText(
+                    this@UserDetailsFragment.requireContext(),
+                    "Error Loading Repos",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
 
     private fun updateList(list: List<RepoDetails>) {
-        adapter?.addList(list)
+        adapter?.submitList(list)
     }
 
     var adapter: UserDetailsAdapter? = null
     var isLoading: Boolean = false
 
-    private fun bindRecycler(list: ArrayList<RepoDetails>) {
+    private fun initRecycler() {
 
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        adapter = UserDetailsAdapter(list) {
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        adapter = UserDetailsAdapter {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it.html_url))
             startActivity(browserIntent)
         }
@@ -96,24 +110,23 @@ class UserDetailsFragment : ScopedFragment(), KodeinAware {
         user_recycler?.layoutManager = layoutManager
         user_recycler?.adapter = adapter
         user_recycler?.addOnScrollListener(object :
-                PaginationScrollListener(layoutManager) {
+            PaginationScrollListener(layoutManager) {
             override fun isLoading(): Boolean {
                 return isLoading
             }
 
             override fun loadMoreItems() {
                 isLoading = true
-                load_more_progress.visibility = View.VISIBLE
                 getMoreItems()
             }
         })
 
     }
 
-    private var page = 0
+    private var page = 1
 
     private fun getMoreItems() = launch {
-        viewModel.getUserRepos(userName, page++).await()
+        viewModel.getUserRepos(userName, ++page).await()
     }
 
 }

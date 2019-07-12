@@ -1,7 +1,9 @@
 package com.moduscapital.github.data.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.moduscapital.github.data.network.response.*
+import com.moduscapital.github.data.network.response.Owner
+import com.moduscapital.github.data.network.response.RepoDetails
+import com.moduscapital.github.data.network.response.SearchReaslt
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -19,20 +21,22 @@ interface ApiService {
     //https://api.github.com/users/hazem3ly/repos
     @GET("users/{user_name}/repos")
     fun userRepos(
-            @Path("user_name") userName: String,
-            @Query("page") page: Int = 0
+        @Path("user_name") userName: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 10
     ): Deferred<Response<List<RepoDetails>>>
 
     @GET("users")
     fun users(
-            @Query("since") since: Int
+        @Query("since") since: Int,
+        @Query("per_page") perPage: Int = 10
     ): Deferred<Response<List<Owner>>>
 
     @GET("search/users")
     fun searchUsers(
-            @Query("q") query: String,
-            @Query("page") page: Int = 0,
-            @Query("per_page") perPage: Int = 20
+        @Query("q") query: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 10
     ): Deferred<Response<SearchReaslt>>
 
 
