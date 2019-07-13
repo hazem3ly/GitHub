@@ -8,6 +8,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.moduscapital.github.R
+import com.moduscapital.github.extensions.loadSavedUser
+import com.moduscapital.github.ui.fragments.userdetails.UserDetailsFragmentArgs
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -25,6 +27,18 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+
+        loadSavedUserIfExist()
+
+
+    }
+
+    private fun loadSavedUserIfExist() {
+        val user = loadSavedUser()
+        if (user != "") {
+            val bundle = UserDetailsFragmentArgs.Builder().setUserName(user).build()
+            navController.navigate(R.id.userDetailsFragment, bundle.toBundle())
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

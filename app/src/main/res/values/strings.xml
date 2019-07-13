@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">GitHub</string>
     <string name="users">Users</string>
+    <string name="forks_count">Forks Count :</string>
+    <string name="languages">Languages :</string>
+    <string name="creation_date">Creation Date :</string>
+    <string name="loading">Loading</string>
+    <string name="welcome_to_github_app">Welcome To GitHub App</string>
+    <string name="you_can_enter_github_user_name_or_get_all_users">you can enter github user name or get all users</string>
+    <string name="user_name">User Name</string>
+    <string name="or">OR</string>
+    <string name="load_all_users">Load All Users</string>
+    <string name="search">Search</string>
+    <string name="load_last_user">Load Last User</string>
 
 </resources>

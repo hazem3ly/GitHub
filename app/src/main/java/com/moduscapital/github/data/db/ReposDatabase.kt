@@ -16,12 +16,12 @@ abstract class ReposDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var inistance: ReposDatabase? = null
+        private var instance: ReposDatabase? = null
 
         private val LOCK = Any()
 
-        operator fun invoke(context: Context) = inistance ?: synchronized(LOCK) {
-            inistance ?: buildDatabase(context).also { inistance = it }
+        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
+            instance ?: buildDatabase(context).also { instance = it }
         }
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(

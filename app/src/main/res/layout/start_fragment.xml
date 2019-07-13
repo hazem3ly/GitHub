@@ -19,7 +19,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="108dp"
             android:layout_marginEnd="8dp"
-            android:text="Welcom To GitHub App"
+                android:text="@string/welcome_to_github_app"
             android:textAlignment="center"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="you can enter github user name or get all users"
+                android:text="@string/you_can_enter_github_user_name_or_get_all_users"
             android:textAlignment="center"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +55,7 @@
                 android:id="@+id/user_name_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="User Name" />
+                    android:hint="@string/user_name" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="OR"
+                android:text="@string/or"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -105,40 +105,39 @@
             app:layout_constraintGuide_percent="0.50121653" />
 
         <Button
-            android:id="@+id/load_all_users"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginBottom="32dp"
-            android:text="Load All Users"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4"
-            app:layout_constraintVertical_bias="0.278" />
+                android:id="@+id/load_all_users"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="52dp"
+                android:layout_marginEnd="100dp"
+                android:text="@string/load_all_users"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <Button
             android:id="@+id/search_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search"
+                android:text="@string/search"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
         <Button
-            android:id="@+id/load_saved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="30dp"
-            android:text="Load Last User"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                android:id="@+id/load_saved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/load_last_user"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/load_all_users"
+                app:layout_constraintVertical_bias="0.84000003" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

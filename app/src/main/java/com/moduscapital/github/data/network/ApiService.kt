@@ -3,7 +3,7 @@ package com.moduscapital.github.data.network
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.moduscapital.github.data.network.response.Owner
 import com.moduscapital.github.data.network.response.RepoDetails
-import com.moduscapital.github.data.network.response.SearchReaslt
+import com.moduscapital.github.data.network.response.SearchResult
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -23,7 +23,9 @@ interface ApiService {
     fun userRepos(
         @Path("user_name") userName: String,
         @Query("page") page: Int = 1,
-        @Query("per_page") perPage: Int = 10
+        @Query("per_page") perPage: Int = 10,
+        @Query("sort") sort: String = "created",
+        @Query("direction") direction: String = "asc"
     ): Deferred<Response<List<RepoDetails>>>
 
     @GET("users")
@@ -37,7 +39,7 @@ interface ApiService {
         @Query("q") query: String,
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 10
-    ): Deferred<Response<SearchReaslt>>
+    ): Deferred<Response<SearchResult>>
 
 
     companion object {

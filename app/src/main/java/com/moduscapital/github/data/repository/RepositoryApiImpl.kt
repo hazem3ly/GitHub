@@ -5,7 +5,7 @@ import com.moduscapital.github.data.db.RepoDetailsDao
 import com.moduscapital.github.data.network.NetworkDataSource
 import com.moduscapital.github.data.network.response.Owner
 import com.moduscapital.github.data.network.response.RepoDetails
-import com.moduscapital.github.data.network.response.SearchReaslt
+import com.moduscapital.github.data.network.response.SearchResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ class RepositoryApiImpl(
 
     init {
         networkDataSource.apply {
-            userRepos.observeForever {
+            userRepos.observeForever { it ->
                 // persist
                 it?.let {
                     persistFetchedData(it)
@@ -53,7 +53,7 @@ class RepositoryApiImpl(
         query: String,
         page: Int,
         perPage: Int
-    ): LiveData<Response<SearchReaslt>> {
+    ): LiveData<Response<SearchResult>> {
         return withContext(Dispatchers.IO) {
             networkDataSource.searchUsers(query, page, perPage)
             return@withContext networkDataSource.searchUsers

@@ -39,8 +39,8 @@ class HomeFragment : ScopedFragment(), KodeinAware {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.home_fragment, container, false)
@@ -51,21 +51,8 @@ class HomeFragment : ScopedFragment(), KodeinAware {
         inflater?.inflate(R.menu.main_menu, menu)
 
         val searchViewItem = menu?.findItem(R.id.search)
-        /*    searchViewItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                    return true
-                }
 
-                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                    progress.visibility = View.VISIBLE
-                    usersAdapter.removeItems()
-                    getMoreUsers(0)
-                    isSearching = false
-                    return true
-                }
-            })*/
-
-        searchView = searchViewItem?.actionView as SearchView
+        searchView = searchViewItem?.actionView as? SearchView
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchView?.clearFocus()
@@ -103,7 +90,8 @@ class HomeFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun initRecycler() {
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         usersAdapter = UsersAdapter {
             openUserDetails(it)
         }
@@ -111,7 +99,7 @@ class HomeFragment : ScopedFragment(), KodeinAware {
         users_recycler?.layoutManager = layoutManager
         users_recycler?.adapter = usersAdapter
         users_recycler?.addOnScrollListener(object :
-                PaginationScrollListener(layoutManager) {
+            PaginationScrollListener(layoutManager) {
             override fun isLoading(): Boolean {
                 return isLoading
             }
@@ -131,8 +119,8 @@ class HomeFragment : ScopedFragment(), KodeinAware {
 
     private fun openUserDetails(user: Owner) {
         val action =
-                HomeFragmentDirections.actionHomeFragmentToUserDetailsFragment()
-        action.userName = user.login?:""
+            HomeFragmentDirections.actionHomeFragmentToUserDetailsFragment()
+        action.userName = user.login ?: ""
         view?.findNavController()?.navigate(action)
     }
 
@@ -148,7 +136,11 @@ class HomeFragment : ScopedFragment(), KodeinAware {
             if (it != null && it.isSuccessful) {
                 updateRecycler(it.body() ?: emptyList())
             } else
-                Toast.makeText(this@HomeFragment.requireContext(), "Error Loading Users", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@HomeFragment.requireContext(),
+                    "Error Loading Users",
+                    Toast.LENGTH_SHORT
+                ).show()
         })
 
     }
@@ -166,10 +158,13 @@ class HomeFragment : ScopedFragment(), KodeinAware {
             if (it != null && it.isSuccessful) {
                 updateRecycler(it.body()?.items ?: emptyList())
             } else
-                Toast.makeText(this@HomeFragment.requireContext(), "Error Loading Repos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@HomeFragment.requireContext(),
+                    "Error Loading Repos",
+                    Toast.LENGTH_SHORT
+                ).show()
         })
     }
-
 
 
     private fun getMoreSearching() = launch {

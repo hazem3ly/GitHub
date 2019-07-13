@@ -72,7 +72,7 @@ class UserDetailsFragment : ScopedFragment(), KodeinAware {
 
 
     private fun getUserRepos(userName: String) = launch {
-        progress.visibility = View.VISIBLE
+        progress?.visibility = View.VISIBLE
         val userRepos = viewModel.getUserRepos(userName).await()
         userRepos.observe(this@UserDetailsFragment.viewLifecycleOwner, Observer {
             progress.visibility = View.GONE
@@ -95,7 +95,7 @@ class UserDetailsFragment : ScopedFragment(), KodeinAware {
         adapter?.submitList(list)
     }
 
-    var adapter: UserDetailsAdapter? = null
+    private var adapter: UserDetailsAdapter? = null
     var isLoading: Boolean = false
 
     private fun initRecycler() {

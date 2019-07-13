@@ -10,9 +10,9 @@ import kotlinx.android.synthetic.main.user_layout_item.view.*
 
 class UsersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val owner_image = itemView.owner_image
-    val repo_owner = itemView.repo_owner
-    val image_loader = itemView.image_loader
+    private val ownerImage = itemView.owner_image
+    private val repoOwner = itemView.repo_owner
+    private val imageLoader = itemView.image_loader
 
     fun bind(item: Owner, onItemClicked: (repo: Owner) -> Unit) {
         itemView.setOnClickListener {
@@ -20,16 +20,16 @@ class UsersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         Picasso.get().load(item.avatar_url).error(R.drawable.github_repo).fit()
-                .into(owner_image, object : Callback {
+            .into(ownerImage, object : Callback {
                     override fun onError(e: Exception?) {
-                        image_loader.visibility = View.GONE
+                        imageLoader.visibility = View.GONE
                     }
 
                     override fun onSuccess() {
-                        image_loader.visibility = View.GONE
+                        imageLoader.visibility = View.GONE
                     }
                 })
 
-        repo_owner.text = item.login
+        repoOwner.text = item.login
     }
 }

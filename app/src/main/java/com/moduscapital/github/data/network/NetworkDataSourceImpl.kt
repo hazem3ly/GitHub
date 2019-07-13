@@ -3,7 +3,9 @@ package com.moduscapital.github.data.network
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.moduscapital.github.data.network.response.*
+import com.moduscapital.github.data.network.response.Owner
+import com.moduscapital.github.data.network.response.RepoDetails
+import com.moduscapital.github.data.network.response.SearchResult
 import retrofit2.Response
 import java.io.IOException
 
@@ -24,8 +26,8 @@ class NetworkDataSourceImpl(
         }
     }
 
-    private val _searchUsersResponse = MutableLiveData<Response<SearchReaslt>>()
-    override val searchUsers: LiveData<Response<SearchReaslt>>
+    private val _searchUsersResponse = MutableLiveData<Response<SearchResult>>()
+    override val searchUsers: LiveData<Response<SearchResult>>
         get() = _searchUsersResponse
 
     override suspend fun searchUsers(query: String,page:Int,perPage:Int) {

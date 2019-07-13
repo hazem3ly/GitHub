@@ -5,7 +5,7 @@ import com.moduscapital.github.data.repository.RepositoryApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-class UserDetailsViewModel(val repository: RepositoryApi) : ViewModel() {
+class UserDetailsViewModel(private val repository: RepositoryApi) : ViewModel() {
     internal suspend fun getUserRepos(userName: String, page: Int = 1) = GlobalScope.async {
         return@async repository.getUserRepos(userName, page)
     }

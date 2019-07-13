@@ -32,7 +32,7 @@ class UsersAdapter(
     }
 
     fun getLastItemId(): Int {
-        return list?.last().id ?: 0
+        return list.last().id ?: 0
     }
 
     fun addList(list: List<Owner>) {

@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_layout.view.*
 
 class UserDetailsAdapter(
-        val onRepoClicked: (repo: RepoDetails) -> Unit
+    val onRepoClicked: (repo: RepoDetails) -> Unit
 ) : ListAdapter<RepoDetails, UserDetailsAdapter.ItemViewHolder>(TaskDiffCallback())
 /* RecyclerView.Adapter<UserDetailsAdapter.ItemViewHolder>() */ {
 //    val userRepos: ArrayList<RepoDetails> = arrayListOf()
@@ -45,13 +45,13 @@ class UserDetailsAdapter(
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val owner_image = itemView.owner_image
-        val repo_description = itemView.repo_description
-        val forks_count = itemView.forks_count
-        val language = itemView.language
-        val creation_date = itemView.creation_date
-        val repo_name = itemView.repo_name
-        val image_loader = itemView.image_loader
+        private val ownerImage = itemView.owner_image
+        private val repoDescription = itemView.repo_description
+        private val forksCount = itemView.forks_count
+        private val language = itemView.language
+        private val creationDate = itemView.creation_date
+        private val repoName = itemView.repo_name
+        private val imageLoader = itemView.image_loader
 
         fun bind(item: RepoDetails, onItemClicked: (repo: RepoDetails) -> Unit) {
             itemView.setOnClickListener {
@@ -59,21 +59,21 @@ class UserDetailsAdapter(
             }
 
             Picasso.get().load(item.owner?.avatar_url).error(R.drawable.github_repo).fit()
-                    .into(owner_image, object : Callback {
-                        override fun onError(e: Exception?) {
-                            image_loader.visibility = View.GONE
-                        }
+                .into(ownerImage, object : Callback {
+                    override fun onError(e: Exception?) {
+                        imageLoader.visibility = View.GONE
+                    }
 
-                        override fun onSuccess() {
-                            image_loader.visibility = View.GONE
-                        }
-                    })
+                    override fun onSuccess() {
+                        imageLoader.visibility = View.GONE
+                    }
+                })
 
-            repo_name.text = item.name
-            repo_description.text = item.description
+            repoName.text = item.name
+            repoDescription.text = item.description
             language.text = item.language
-            creation_date.text = item.created_at
-            forks_count.text = "${item.forks_count}"
+            creationDate.text = item.created_at
+            forksCount.text = "${item.forks_count}"
         }
     }
 

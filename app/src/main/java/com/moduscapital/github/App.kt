@@ -28,14 +28,4 @@ class App : Application(), KodeinAware {
         bind() from provider { UserDetailsViewModelFactory(instance()) }
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        instance = this
-    }
-
-    companion object {
-        private lateinit var instance: App
-        fun getInstance() = instance
-    }
-
 }
